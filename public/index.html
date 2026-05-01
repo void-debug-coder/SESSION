@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>VOID-MD Session</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: Arial, sans-serif; }
+        body { background: #fff; text-align: center; padding: 20px; }
+        h1 { color: #2c3e50; margin: 40px 0; font-size: 32px; }
+        .btn {
+            display: block;
+            width: 90%;
+            max-width: 400px;
+            margin: 15px auto;
+            padding: 18px;
+            background: #8BC34A;
+            color: #000;
+            border: none;
+            border-radius: 25px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+        .btn:hover { background: #7CB342; }
+        #numberInput {
+            width: 90%;
+            max-width: 400px;
+            padding: 15px;
+            margin: 20px auto;
+            border: 2px solid #8BC34A;
+            border-radius: 10px;
+            font-size: 16px;
+            text-align: center;
+        }
+        #result {
+            margin: 20px auto;
+            padding: 15px;
+            width: 90%;
+            max-width: 600px;
+            background: #f5f5f5;
+            border-radius: 10px;
+            word-break: break-all;
+            display: none;
+        }
+        #copyBtn { background: #2196F3; color: white; }
+        .footer { margin-top: 100px; color: #666; }
+        .time { position: fixed; bottom: 10px; width: 100%; color: #999; }
+    </style>
+</head>
+<body>
+    <h1>This is VOID-MD session</h1>
+    
+    <input type="text" id="numberInput" placeholder="Enter WhatsApp number with country code" value="25410181691">
+    
+    <button class="btn" onclick="getPairCode()">PAIR CODE</button>
+    <button class="btn" onclick="window.open('https://github.com/MrVoid/VOID-MD', '_blank')">FORK VOID-MD REPO</button>
+    
+    <div id="result"></div>
+    <button class="btn" id="copyBtn" style="display:none;" onclick="copySession()">COPY SESSION ID</button>
+    
+    <div class="footer">© 2026</div>
+    <div class="time" id="time"></div>
+
+    <script>
+        const ws = new WebSocket(`wss://${window.location.host}`)
+        let currentSession = ''
+        
+        ws.onmessage = (event) => {
+            const data = JSON.parse(event.data)
+            if (data.sessionID) {
+                currentSession = data.sessionID
+                document.getElementById('result').style.display = 'block'
+                document.getElementById('result').innerHTML = `<b>SESSION ID GENERATED 💀</b><br><br>${data.sessionID}`
+                document.getElementById('copyBtn').style.display = 'block'
+            }
+            if (data.error) {
+                alert(data.error)
+            }
+        }
+        
+        async function getPairCode() {
+            const number = document.getElementById('numberInput').value
+            if (!number) return alert('Enter number first 💀')
+            
+            document.getElementById('result').style.display = 'block'
+            document.getElementById('result').innerHTML = 'Getting Pair Code...'
+            
+            const res = await fetch('/pair', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ number })
+            })
+            const data = await res.json()
+            
+            if (data.success) {
+                document.getElementById('result').innerHTML = `<b>PAIR CODE: ${data.code}</b><br><br>${data.message}<br><br>Waiting for you to link... Session ID will appear here automatically.`
+            } else {
+                document.getElementById('result').innerHTML = `ERROR: ${data.error}`
+            }
+        }
+        
+        function copySession() {
+            navigator.clipboard.writeText(currentSession)
+            alert('Session ID Copied 💀')
+        }
+        
+        setInterval(() => {
+            const now = new Date()
+            document.getElementById('time').innerHTML = `Time: ${now.toLocaleTimeString()} | Date: ${now.toLocaleDateString()} | Day: ${now.toLocaleDateString('en-US', {weekday: 'long'})}`
+        }, 1000)
+    </script>
+</body>
+</html>
