@@ -1,0 +1,14 @@
+{
+  "name": "void-md-pair",
+  "version": "1.0.0",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "@whiskeysockets/baileys": "^6.7.8",
+    "express": "^4.18.2",
+    "ws": "^8.14.2",
+    "pino": "^8.17.0"
+  }
+}
