@@ -1,6 +1,6 @@
 const express = require('express')
 const cors = require('cors')
-const { default: makeWASocket, useMultiFileAuthState, Browsers } = require('@whiskeysockets/baileys')
+const { default: makeWASocket, useMultiFileAuthState } = require('@whiskeysockets/baileys')
 const pino = require('pino')
 const fs = require('fs')
 const path = require('path')
@@ -34,11 +34,15 @@ app.post('/pair', async (req, res) => {
         fs.mkdirSync(sessionDir)
         
         const { state, saveCreds } = await useMultiFileAuthState(sessionDir)
+        
+        // 2026 FIX: Use old browser array format for Baileys 6.7.8 💀
         const sock = makeWASocket({
             logger: pino({ level: 'silent' }),
             auth: state,
-            browser: Browsers.ios('Safari'),
-            version: [2, 3000, 1023223821]
+            browser: ['VOID-MD', 'Safari', '1.0.0'], // This works on all versions
+            version: [2, 3000, 1023223821],
+            printQRInTerminal: false,
+            syncFullHistory: false
         })
 
         let done = false
@@ -67,7 +71,7 @@ app.post('/pair', async (req, res) => {
         setTimeout(() => {
             if (!done) {
                 done = true
-                res.json({ success: false, error: 'Timeout after 20s' })
+                res.json({ success: false, error: 'Timeout after 20s. Try again.' })
             }
             try { sock?.end() } catch {}
             try { fs.rmSync(sessionDir, { recursive: true, force: true }) } catch {}
