@@ -1,6 +1,7 @@
 {
   "name": "void-md-pair",
-  "version": "1.0.0",
+  "version": "2.0.0",
+  "description": "VOID-MD WhatsApp Pair Code + Session ID Generator 2026",
   "main": "server.js",
   "scripts": {
     "start": "node server.js"
@@ -9,6 +10,7 @@
     "express": "^4.18.2",
     "@whiskeysockets/baileys": "latest",
     "pino": "^8.17.0",
+    "cors": "^2.8.5",
     "ws": "^8.16.0"
   }
 }
